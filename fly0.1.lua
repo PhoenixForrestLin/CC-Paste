@@ -26,7 +26,7 @@ local cfg = {
 
   -- 主桨推力标定：单位输出产生的推力（N/unit），先粗标，之后由 hoverTrim 自学习
   -- 实测 mass = 115, g = 11 → 悬停总需推力 ≈ 1265 N
-  thrustPerUnitMain = 6.0,     -- N / unit
+  thrustPerUnitMain = 0.95,     -- N / unit
   hoverTrimTau      = 4.0,     -- 悬停配平学习时间常数 s
 
   -- 环境兜底值（实测 aero.getDefault(): gravity = 0,-11,0 / pressure = 1 / universalDrag = 0.09）
@@ -41,7 +41,7 @@ local cfg = {
   faceDeadzone = 3.0,          -- m，距离小于此值不再强行对准机头
 
   -- 符号约定（若实机反向，把对应项改为 -1）
-  sign = { yaw = 1, fwd = 1, main = 1 },
+  sign = { yaw = -1, fwd = -1, main = -1 },
 
   -- 输出限制
   slewMain = 900,              -- 每秒最大变化量（unit/s），防止硬阶跃
@@ -68,11 +68,11 @@ local dashPanel = peripheral.wrap("control_panel_2")
 
 local device = {
   -- 主桨
-  mainRotor = peripheral.wrap("Create_RotationSpeedController_8"),
+  mainRotor = peripheral.wrap("Create_RotationSpeedController_11"),
 
   -- 左右发
-  leftEngine = peripheral.wrap("Create_RotationSpeedController_6"),
-  rightEngine = peripheral.wrap("Create_RotationSpeedController_5"),
+  leftEngine = peripheral.wrap("Create_RotationSpeedController_10"),
+  rightEngine = peripheral.wrap("Create_RotationSpeedController_9"),
 
   -- 输入设备
   switch = dashPanel.getModule("switch"),
