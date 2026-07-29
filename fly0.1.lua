@@ -26,7 +26,7 @@ local cfg = {
 
   -- 主桨推力标定：单位输出产生的推力（N/unit），先粗标，之后由 hoverTrim 自学习
   -- 实测 mass = 115, g = 11 → 悬停总需推力 ≈ 1265 N
-  thrustPerUnitMain = 0.95,     -- N / unit
+  thrustPerUnitMain = 10.54,     -- N / unit
   hoverTrimTau      = 4.0,     -- 悬停配平学习时间常数 s
 
   -- 环境兜底值（实测 aero.getDefault(): gravity = 0,-11,0 / pressure = 1 / universalDrag = 0.09）
