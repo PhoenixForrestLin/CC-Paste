@@ -481,16 +481,16 @@ end
 ---------------------------------------------------------------------
 local function controlTask(fcs)
   local dtNom = 1 / cfg.loopHz
-  local last = os.clock()
-  local timer = os.startTimer(dtNom)
+  local last = os.epoch("utc") / 1000
+  fcs.ticks = 0
   while true do
-    local ev, id = os.pullEvent()
-    if ev == "timer" and id == timer then
-      timer = os.startTimer(dtNom)
-      local now = os.clock()
-      local dt = clamp(now - last, 0.01, 0.25)
-      last = now
+    sleep(dtNom)                       -- 不再手动管理 timer id
+    local now = os.epoch("utc") / 1000
+    local dt = clamp(now - last, 0.01, 0.25)
+    last = now
+    fcs.ticks = fcs.ticks + 1
 
+    local ok, err = pcall(function()
       local s = sensor.read()
       local bad = (s == nil) or (s.up.y < cfg.maxTiltDot)
       if bad then
@@ -502,7 +502,8 @@ local function controlTask(fcs)
         if fcs.phase == "FAILSAFE" then fcs.phase = "INIT" end
         fcs:step(s, readSticks(), dt)
       end
-    end
+    end)
+    if not ok then fcs.lastErr = tostring(err) end
   end
 end
 
@@ -515,6 +516,8 @@ local function hudTask(fcs)
       print(("dist %.2f  altErr %+.2f  hdgErr %+.2f"):format(d.dist, d.altErr, d.hdgErr))
       print(("vzCmd %+.2f  vFwdCmd %+.2f  trim %.1f"):format(d.vzCmd, d.vFwdCmd, d.trim or 0))
       print(("OUT main %d  L %d  R %d"):format(outState.main, outState.left, outState.right))
+      print(("tick %d  dt %s"):format(fcs.ticks or 0, fcs.lastErr and "ERR" or "ok"))
+      if fcs.lastErr then print(("ERR %s"):format(fcs.lastErr)) end
     end
     sleep(0.2)
   end
