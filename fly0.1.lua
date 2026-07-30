@@ -68,7 +68,7 @@ local dashPanel = peripheral.wrap("control_panel_2")
 
 local device = {
   -- 主桨
-  mainRotor = peripheral.wrap("Create_RotationSpeedController_11"),
+  mainRotor = peripheral.wrap("Create_RotationSpeedController_12"),
 
   -- 左右发
   leftEngine = peripheral.wrap("Create_RotationSpeedController_10"),
